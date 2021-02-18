@@ -59,7 +59,7 @@ const MotorPerifDef** motorMap;  /* Current map configuration */
 
 const uint32_t MOTORS[] = { MOTOR_M1, MOTOR_M2, MOTOR_M3, MOTOR_M4 };
 
-const uint16_t testsound[NBR_OF_MOTORS] = {A4, A5, F5, D5 };
+const uint16_t testsound[NBR_OF_MOTORS] = {C4, E4, G4, C5 };
 
 static bool isInit = false;
 
@@ -200,10 +200,15 @@ bool motorsTest(void)
     if (motorMap[i]->drvType == BRUSHED)
     {
 #ifdef ACTIVATE_STARTUP_SOUND
+      //Gamme
       motorsBeep(MOTORS[i], true, testsound[i], (uint16_t)(MOTORS_TIM_BEEP_CLK_FREQ / A4)/ 20);
       vTaskDelay(M2T(MOTORS_TEST_ON_TIME_MS));
       motorsBeep(MOTORS[i], false, 0, 0);
       vTaskDelay(M2T(MOTORS_TEST_DELAY_TIME_MS));
+      //motorsBeep(MOTORS[i], true, testsound[i], (uint16_t)(MOTORS_TIM_BEEP_CLK_FREQ / A4)/ 20);
+      //vTaskDelay(M2T(MOTORS_TEST_ON_TIME_MS));
+      //motorsBeep(MOTORS[i], false, 0, 0);
+      //vTaskDelay(M2T(MOTORS_TEST_DELAY_TIME_MS));
 #else
       motorsSetRatio(MOTORS[i], MOTORS_TEST_RATIO);
       vTaskDelay(M2T(MOTORS_TEST_ON_TIME_MS));
@@ -212,7 +217,24 @@ bool motorsTest(void)
 #endif
     }
   }
+// Accord
+  if (motorMap[i]->drvType == BRUSHED)
+      {
+#ifdef ACTIVATE_STARTUP_SOUND
+  	  for (i = 0; i < sizeof(MOTORS) / sizeof(*MOTORS); i++)
+  	  {
+  	  motorsBeep(MOTORS[i], true, testsound[i], (uint16_t)(MOTORS_TIM_BEEP_CLK_FREQ / A4)/ 20);
+  	  }
 
+      vTaskDelay(M2T(MOTORS_TEST_ON_TIME_MS*4));
+
+      for (i = 0; i < sizeof(MOTORS) / sizeof(*MOTORS); i++)
+      {
+      motorsBeep(MOTORS[i], false, 0, 0);
+      }
+
+#endif
+      }
   return isInit;
 }
 
